@@ -1,0 +1,35 @@
+site_id: claude-code-docs
+name: Claude Code Docs
+base_url: https://code.claude.com/docs/en/overview
+auth:
+  type: none
+capabilities:
+  get_index:
+    type: read
+    params: {}
+    returns: object
+  get_page:
+    type: read
+    params:
+      path: string
+      result_mode: string
+      max_chars: integer
+    returns: object
+  search_docs:
+    type: read
+    params:
+      query: string
+      limit: integer
+      snippet_chars: integer
+      auto_refresh: boolean
+      include_meta: boolean
+    returns: object
+  refresh_index:
+    type: read
+    params:
+      limit: integer
+    returns: object
+  list_pages:
+    type: read
+    params: {}
+    returns: object

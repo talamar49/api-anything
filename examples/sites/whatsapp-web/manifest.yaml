@@ -1,0 +1,75 @@
+site_id: whatsapp-web
+name: WhatsApp Web
+base_url: https://web.whatsapp.com/
+auth:
+  type: existing_browser_session
+capabilities:
+  health:
+    type: read
+    params:
+      timeout: integer
+    returns: object
+  list_chats:
+    type: read
+    params:
+      max_chats: integer
+      timeout: integer
+    returns: object
+  extract_today:
+    type: read
+    params:
+      deep: boolean
+      max_chats: integer
+      timeout: integer
+    returns: object
+  extract_date:
+    type: read
+    params:
+      date: date
+      max_chats: integer
+      max_scroll_up: integer
+      timeout: integer
+    returns: object
+  extract_chat:
+    type: read
+    params:
+      chat: string
+      date: date
+      max_scroll_up: integer
+      timeout: integer
+    returns: object
+  extract_chat_by_date:
+    type: read
+    params:
+      chat: string
+      date: date
+      max_scroll_up: integer
+      timeout: integer
+    returns: object
+  summary_today:
+    type: read
+    params:
+      deep: boolean
+      max_chats: integer
+      date: date
+      max_scroll_up: integer
+      timeout: integer
+    returns: object
+  progress:
+    type: read
+    params:
+      timeout: integer
+    returns: object
+  last:
+    type: read
+    params:
+      timeout: integer
+    returns: object
+  send_message:
+    type: write
+    params:
+      chat: string
+      text: string
+      timeout_ms: integer
+    requires_confirmation: true
+    returns: object

@@ -1,0 +1,34 @@
+site_id: x-web
+name: X Web
+base_url: https://x.com/
+auth:
+  type: existing_browser_session
+capabilities:
+  health:
+    type: read
+    params:
+      cdp_url: string
+      timeout_ms: integer
+    returns: object
+  login_status:
+    type: read
+    params:
+      cdp_url: string
+      timeout_ms: integer
+    returns: object
+  post:
+    type: write
+    params:
+      text: string
+      cdp_url: string
+      timeout_ms: integer
+    requires_confirmation: true
+    returns: object
+  post_thread:
+    type: write
+    params:
+      posts: array
+      cdp_url: string
+      timeout_ms: integer
+    requires_confirmation: true
+    returns: object

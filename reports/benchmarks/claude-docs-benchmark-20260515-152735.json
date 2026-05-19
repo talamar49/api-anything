@@ -1,0 +1,266 @@
+{
+  "generated_at": "2026-05-15T15:27:35+0300",
+  "runs_per_scenario": 5,
+  "json_path": "/path/to/api-anything/reports/benchmarks/claude-docs-benchmark-20260515-152735.json",
+  "markdown_path": "/path/to/api-anything/reports/benchmarks/claude-docs-benchmark-20260515-152735.md",
+  "samples": [
+    {
+      "scenario": "api_anything_search_all_queries",
+      "run": 1,
+      "ok": true,
+      "seconds": 20.126734318211675,
+      "output_chars": 12280,
+      "estimated_tokens": 3070,
+      "result_count": 29,
+      "error": null
+    },
+    {
+      "scenario": "api_anything_direct_pages",
+      "run": 1,
+      "ok": true,
+      "seconds": 1.9638321371749043,
+      "output_chars": 65024,
+      "estimated_tokens": 16256,
+      "result_count": 3,
+      "error": null
+    },
+    {
+      "scenario": "raw_manual_targeted_pages",
+      "run": 1,
+      "ok": true,
+      "seconds": 0.5919838463887572,
+      "output_chars": 87469,
+      "estimated_tokens": 21868,
+      "result_count": 4,
+      "error": null
+    },
+    {
+      "scenario": "raw_manual_discovery_then_pages",
+      "run": 1,
+      "ok": true,
+      "seconds": 0.8634423362091184,
+      "output_chars": 115221,
+      "estimated_tokens": 28806,
+      "result_count": 5,
+      "error": null
+    },
+    {
+      "scenario": "api_anything_search_all_queries",
+      "run": 2,
+      "ok": true,
+      "seconds": 16.22607086133212,
+      "output_chars": 12280,
+      "estimated_tokens": 3070,
+      "result_count": 29,
+      "error": null
+    },
+    {
+      "scenario": "api_anything_direct_pages",
+      "run": 2,
+      "ok": true,
+      "seconds": 2.0797408325597644,
+      "output_chars": 65024,
+      "estimated_tokens": 16256,
+      "result_count": 3,
+      "error": null
+    },
+    {
+      "scenario": "raw_manual_targeted_pages",
+      "run": 2,
+      "ok": true,
+      "seconds": 0.5116158854216337,
+      "output_chars": 87469,
+      "estimated_tokens": 21868,
+      "result_count": 4,
+      "error": null
+    },
+    {
+      "scenario": "raw_manual_discovery_then_pages",
+      "run": 2,
+      "ok": true,
+      "seconds": 0.5807728599756956,
+      "output_chars": 115221,
+      "estimated_tokens": 28806,
+      "result_count": 5,
+      "error": null
+    },
+    {
+      "scenario": "api_anything_search_all_queries",
+      "run": 3,
+      "ok": true,
+      "seconds": 16.309282544068992,
+      "output_chars": 12280,
+      "estimated_tokens": 3070,
+      "result_count": 29,
+      "error": null
+    },
+    {
+      "scenario": "api_anything_direct_pages",
+      "run": 3,
+      "ok": true,
+      "seconds": 2.0423386050388217,
+      "output_chars": 65024,
+      "estimated_tokens": 16256,
+      "result_count": 3,
+      "error": null
+    },
+    {
+      "scenario": "raw_manual_targeted_pages",
+      "run": 3,
+      "ok": true,
+      "seconds": 0.48649519123136997,
+      "output_chars": 87469,
+      "estimated_tokens": 21868,
+      "result_count": 4,
+      "error": null
+    },
+    {
+      "scenario": "raw_manual_discovery_then_pages",
+      "run": 3,
+      "ok": true,
+      "seconds": 0.5459438990801573,
+      "output_chars": 115221,
+      "estimated_tokens": 28806,
+      "result_count": 5,
+      "error": null
+    },
+    {
+      "scenario": "api_anything_search_all_queries",
+      "run": 4,
+      "ok": true,
+      "seconds": 18.50721976812929,
+      "output_chars": 12280,
+      "estimated_tokens": 3070,
+      "result_count": 29,
+      "error": null
+    },
+    {
+      "scenario": "api_anything_direct_pages",
+      "run": 4,
+      "ok": true,
+      "seconds": 2.556835471652448,
+      "output_chars": 65024,
+      "estimated_tokens": 16256,
+      "result_count": 3,
+      "error": null
+    },
+    {
+      "scenario": "raw_manual_targeted_pages",
+      "run": 4,
+      "ok": true,
+      "seconds": 0.5110504673793912,
+      "output_chars": 87469,
+      "estimated_tokens": 21868,
+      "result_count": 4,
+      "error": null
+    },
+    {
+      "scenario": "raw_manual_discovery_then_pages",
+      "run": 4,
+      "ok": true,
+      "seconds": 0.7950948551297188,
+      "output_chars": 115221,
+      "estimated_tokens": 28806,
+      "result_count": 5,
+      "error": null
+    },
+    {
+      "scenario": "api_anything_search_all_queries",
+      "run": 5,
+      "ok": true,
+      "seconds": 17.93535500112921,
+      "output_chars": 12280,
+      "estimated_tokens": 3070,
+      "result_count": 29,
+      "error": null
+    },
+    {
+      "scenario": "api_anything_direct_pages",
+      "run": 5,
+      "ok": true,
+      "seconds": 1.902460427954793,
+      "output_chars": 65024,
+      "estimated_tokens": 16256,
+      "result_count": 3,
+      "error": null
+    },
+    {
+      "scenario": "raw_manual_targeted_pages",
+      "run": 5,
+      "ok": true,
+      "seconds": 0.5218988414853811,
+      "output_chars": 87469,
+      "estimated_tokens": 21868,
+      "result_count": 4,
+      "error": null
+    },
+    {
+      "scenario": "raw_manual_discovery_then_pages",
+      "run": 5,
+      "ok": true,
+      "seconds": 0.5249854996800423,
+      "output_chars": 115221,
+      "estimated_tokens": 28806,
+      "result_count": 5,
+      "error": null
+    }
+  ],
+  "summary": {
+    "api_anything_direct_pages": {
+      "runs": 5,
+      "successes": 5,
+      "success_rate": 1.0,
+      "latency_avg_sec": 2.1090414948761462,
+      "latency_p50_sec": 2.0423386050388217,
+      "latency_p95_sec": 2.4614165438339115,
+      "latency_min_sec": 1.902460427954793,
+      "latency_max_sec": 2.556835471652448,
+      "output_chars_avg": 65024,
+      "estimated_tokens_avg": 16256,
+      "result_count_avg": 3,
+      "errors": []
+    },
+    "api_anything_search_all_queries": {
+      "runs": 5,
+      "successes": 5,
+      "success_rate": 1.0,
+      "latency_avg_sec": 17.82093249857426,
+      "latency_p50_sec": 17.93535500112921,
+      "latency_p95_sec": 19.8028314081952,
+      "latency_min_sec": 16.22607086133212,
+      "latency_max_sec": 20.126734318211675,
+      "output_chars_avg": 12280,
+      "estimated_tokens_avg": 3070,
+      "result_count_avg": 29,
+      "errors": []
+    },
+    "raw_manual_discovery_then_pages": {
+      "runs": 5,
+      "successes": 5,
+      "success_rate": 1.0,
+      "latency_avg_sec": 0.6620478900149465,
+      "latency_p50_sec": 0.5807728599756956,
+      "latency_p95_sec": 0.8497728399932384,
+      "latency_min_sec": 0.5249854996800423,
+      "latency_max_sec": 0.8634423362091184,
+      "output_chars_avg": 115221,
+      "estimated_tokens_avg": 28806,
+      "result_count_avg": 5,
+      "errors": []
+    },
+    "raw_manual_targeted_pages": {
+      "runs": 5,
+      "successes": 5,
+      "success_rate": 1.0,
+      "latency_avg_sec": 0.5246088463813067,
+      "latency_p50_sec": 0.5116158854216337,
+      "latency_p95_sec": 0.577966845408082,
+      "latency_min_sec": 0.48649519123136997,
+      "latency_max_sec": 0.5919838463887572,
+      "output_chars_avg": 87469,
+      "estimated_tokens_avg": 21868,
+      "result_count_avg": 4,
+      "errors": []
+    }
+  }
+}

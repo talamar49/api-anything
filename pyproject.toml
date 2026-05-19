@@ -1,0 +1,20 @@
+[project]
+name = "api-anything"
+version = "0.1.0"
+description = "Local API layer over websites for agents"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi",
+  "pydantic",
+  "pyyaml",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "httpx"]
+
+[project.scripts]
+api-anything = "api_anything.cli:main"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

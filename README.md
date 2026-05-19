@@ -1,41 +1,235 @@
 # API Anything
 
-> **Turn any website into an agent-ready API harness.**
+> **Turn any website into an agent-ready API harness — without taking the human out of the loop.**
 
-API Anything is a small, local-first runtime for wrapping websites, dashboards, docs, and browser-authenticated apps as typed capabilities that any AI agent or automation harness can inspect and run.
+API Anything is a local-first runtime for wrapping websites, dashboards, docs, and browser-authenticated apps as typed capabilities that **AI agents can inspect and run** and **humans can understand and approve**.
+
+![WhatsApp Web API preview](docs/assets/whatsapp-web-api-preview.png)
 
 ```text
-Human UI  ──►  API Anything Harness  ──►  Agent / CLI / MCP / Workflow
-website       manifest + adapter          structured JSON capability
+Website / Web app  ──►  API Anything Harness  ──►  Agent / CLI / MCP / Workflow
+Human UI               manifest + adapter          typed JSON capability
 ```
 
-## Why
+## Why this exists
 
 Humans use websites. Agents need APIs.
 
-Most real work still happens inside messy web apps: admin panels, CRMs, docs, inboxes, social tools, dashboards, portals. API Anything adds a generic bridge:
+A lot of real work still happens inside messy web apps: WhatsApp Web, admin panels, CRMs, docs, inboxes, social tools, dashboards, and portals. Many of those apps either have no public API, have a slow/expensive API, or still require a browser-authenticated human session.
 
-- describe a target as a **site harness**;
-- expose actions as typed **capabilities**;
-- run those capabilities from any agent stack;
-- keep auth/session state local;
-- require human approval before writes.
+API Anything adds a small bridge:
 
-No vendor lock-in. No framework lock-in. No personal workspace assumptions.
+- 🧩 describe a website as a **site harness**;
+- 📜 expose actions as typed **capabilities**;
+- 🤖 let agents discover capabilities through JSON/CLI/FastAPI;
+- 👤 let humans read what will happen before it happens;
+- 🔐 keep sessions and secrets local;
+- 🧑‍⚖️ require human approval before writes.
 
-## What it is
+No vendor lock-in. No agent-framework lock-in. No personal workspace assumptions.
 
-API Anything is compatible with existing harness-style agent systems:
+## Who it is for
+
+### For humans
+
+Use API Anything when you want agents to help with websites you already use, while keeping final control over risky actions.
+
+Examples:
+
+- read a WhatsApp Web conversation summary;
+- pull data from a dashboard;
+- search docs and return grounded answers;
+- prepare a social post but require approval before publishing;
+- send a message only after a human reviewed the exact text and destination.
+
+### For agents and harnesses
+
+Use API Anything as an inspectable tool layer:
+
+- JSON-first CLI output;
+- FastAPI runtime;
+- manifest-based capability contracts;
+- read/write risk separation;
+- deterministic adapter entrypoint: `run(capability_id, params, context)`;
+- `doctor` and `inspect` commands before execution;
+- write actions blocked unless human approval metadata is present.
+
+Compatible with:
 
 - CLI agents
-- MCP tools
+- MCP tools/servers
 - browser automation workers
 - workflow engines
 - local daemons
-- custom agent runtimes
+- custom AI runtimes
 - CI/test harnesses
 
-It is intentionally boring and portable: YAML manifests, Python adapters, JSON I/O, FastAPI endpoints, and a CLI.
+## Install
+
+### Option 1: install directly from GitHub
+
+```bash
+python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+pipx install "git+https://github.com/<owner>/api-anything.git"
+api-anything --help
+```
+
+### Option 2: local development
+
+```bash
+git clone https://github.com/<owner>/api-anything.git
+cd api-anything
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e '.[dev]'
+pytest -q
+api-anything --help
+```
+
+## 60-second start
+
+Create a local harness skeleton:
+
+```bash
+api-anything --root ~/.api-anything discover \
+  --site-id example-com \
+  --name "Example" \
+  --base-url https://example.com \
+  --capability read_page
+```
+
+Inspect it:
+
+```bash
+api-anything --root ~/.api-anything list
+api-anything --root ~/.api-anything doctor
+api-anything --root ~/.api-anything inspect example-com
+api-anything --root ~/.api-anything caps example-com
+```
+
+Run a read capability:
+
+```bash
+api-anything --root ~/.api-anything run example-com read_page \
+  --params '{"path":"/"}'
+```
+
+## What a website API looks like
+
+A site harness is just a folder:
+
+```text
+~/.api-anything/
+  sites/
+    whatsapp-web/
+      manifest.yaml
+      adapter.py
+      docs.md
+```
+
+The manifest tells agents and humans what is available:
+
+```yaml
+site_id: whatsapp-web
+name: WhatsApp Web
+base_url: https://web.whatsapp.com/
+auth:
+  type: existing_browser_session
+capabilities:
+  list_chats:
+    type: read
+    params: {}
+    returns: object
+  extract_chat_by_date:
+    type: read
+    params:
+      chat: string
+      date: string
+    returns: object
+  send_message:
+    type: write
+    params:
+      chat: string
+      text: string
+    requires_confirmation: true
+    returns: object
+```
+
+The adapter implements the capabilities:
+
+```python
+def run(capability_id, params, context):
+    if capability_id == "list_chats":
+        return {"ok": True, "chats": []}
+
+    if capability_id == "send_message":
+        # This code is reached only after API Anything verifies:
+        # confirmed=true + human_approval.approved=true.
+        return {"ok": True, "sent": True, "evidence": "sent item visible"}
+
+    raise ValueError(f"unknown capability: {capability_id}")
+```
+
+## Human-in-the-loop safety
+
+Reads are automatic. Writes are not.
+
+For anything that publishes, sends, deletes, updates, buys, submits, or changes external state, API Anything requires two gates:
+
+1. `confirmed: true` / `--confirmed`
+2. human approval metadata proving someone reviewed the exact action
+
+CLI example:
+
+```bash
+api-anything --root ~/.api-anything run whatsapp-web send_message \
+  --params '{"chat":"Example Contact","text":"Final approved message"}' \
+  --confirmed \
+  --approved-by "human-reviewer" \
+  --approval-summary "Reviewed final message text and destination"
+```
+
+HTTP example:
+
+```json
+{
+  "params": {
+    "chat": "Example Contact",
+    "text": "Final approved message"
+  },
+  "confirmed": true,
+  "human_approval": {
+    "approved": true,
+    "approved_by": "human-reviewer",
+    "action_summary": "Reviewed final message text and destination"
+  }
+}
+```
+
+Optional integrity check:
+
+- callers may include `reviewed_params_sha256`;
+- if the final params differ, the write is rejected;
+- the user must review again.
+
+## FastAPI server
+
+Local development:
+
+```bash
+uvicorn api_anything.server:app --app-dir src --reload --host 127.0.0.1 --port 8787
+```
+
+Network-exposed deployments should set a token and sit behind HTTPS/reverse proxy:
+
+```bash
+export API_ANYTHING_TOKEN='***'
+uvicorn api_anything.server:app --app-dir src --host 127.0.0.1 --port 8787
+curl -H "Authorization: Bearer $API_ANYTHING_TOKEN" http://127.0.0.1:8787/sites
+```
+
+`/health` stays public for health checks. Registry and run endpoints require the token when `API_ANYTHING_TOKEN` is set.
 
 ## Core ideas
 
@@ -62,152 +256,7 @@ It is intentionally boring and portable: YAML manifests, Python adapters, JSON I
 - 📦 Batch execution for lower overhead
 - 🔎 Optional local cache/index patterns for docs adapters
 
-## Quick start
-
-```bash
-git clone https://github.com/<owner>/api-anything.git
-cd api-anything
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e '.[dev]'
-pytest -q
-```
-
-Create a harness skeleton:
-
-```bash
-api-anything --root ~/.api-anything discover \
-  --site-id example-com \
-  --name "Example" \
-  --base-url https://example.com \
-  --capability read_page
-```
-
-List and inspect harnesses:
-
-```bash
-api-anything --root ~/.api-anything list
-api-anything --root ~/.api-anything doctor
-api-anything --root ~/.api-anything inspect example-com
-api-anything --root ~/.api-anything caps example-com
-```
-
-Run a read capability:
-
-```bash
-api-anything --root ~/.api-anything run example-com read_page \
-  --params '{"path":"/"}'
-```
-
-## Human-in-the-loop safety
-
-Reads are automatic. Writes are not.
-
-For anything that publishes, sends, deletes, updates, buys, submits, or changes external state, API Anything requires two gates:
-
-1. `confirmed: true` / `--confirmed`
-2. human approval metadata proving someone reviewed the exact action
-
-CLI example:
-
-```bash
-api-anything --root ~/.api-anything run social-web post \
-  --params '{"text":"Final approved post"}' \
-  --confirmed \
-  --approved-by "human-reviewer" \
-  --approval-summary "Reviewed final text and approved publishing"
-```
-
-HTTP example:
-
-```json
-{
-  "params": {
-    "text": "Final approved post"
-  },
-  "confirmed": true,
-  "human_approval": {
-    "approved": true,
-    "approved_by": "human-reviewer",
-    "action_summary": "Reviewed final text and approved publishing"
-  }
-}
-```
-
-Optional integrity check:
-
-- callers may include `reviewed_params_sha256`;
-- if the final params differ, the write is rejected;
-- the user must review again.
-
-## Manifest example
-
-```yaml
-site_id: social-web
-name: Social Web
-base_url: https://example.social/
-auth:
-  type: existing_browser_session
-capabilities:
-  login_status:
-    type: read
-    params: {}
-    returns: object
-  post:
-    type: write
-    params:
-      text: string
-    requires_confirmation: true
-    returns: object
-```
-
-## Adapter example
-
-```python
-def run(capability_id, params, context):
-    if capability_id == "login_status":
-        return {"ok": True, "logged_in": True}
-
-    if capability_id == "post":
-        # This function is only reached after API Anything verifies
-        # confirmed=true + human_approval for the write capability.
-        return {"ok": True, "posted": True}
-
-    raise ValueError(f"unknown capability: {capability_id}")
-```
-
-## FastAPI server
-
-Local development:
-
-```bash
-uvicorn api_anything.server:app --app-dir src --reload --host 127.0.0.1 --port 8787
-```
-
-Network-exposed deployments should set a token and sit behind HTTPS/reverse proxy:
-
-```bash
-export API_ANYTHING_TOKEN='***'
-uvicorn api_anything.server:app --app-dir src --host 127.0.0.1 --port 8787
-curl -H "Authorization: Bearer $API_ANYTHING_TOKEN" http://127.0.0.1:8787/sites
-```
-
-`/health` stays public for health checks. Registry and run endpoints require the token when `API_ANYTHING_TOKEN` is set.
-
-## Project layout
-
-```text
-~/.api-anything/
-  sites/
-    <site_id>/
-      manifest.yaml
-      adapter.py
-      docs.md
-  cache/
-  runs/
-```
-
-Repository layout:
+## Repository layout
 
 ```text
 src/api_anything/
@@ -220,6 +269,8 @@ examples/sites/
   x-web/
   whatsapp-web/
   claude-code-docs/
+docs/assets/
+  whatsapp-web-api-preview.svg
 tests/
 ```
 
@@ -230,8 +281,21 @@ tests/
 - Keep browser sessions local.
 - Prefer read capabilities first.
 - Mark every side-effecting action as `type: write` and `requires_confirmation: true`.
+- Require human approval before publishing, sending, deleting, purchasing, or updating external state.
 - Do not claim success without verifying the external result.
 - Make harnesses inspectable, testable, and portable.
+
+## Hub vision
+
+The next layer is a Git-backed adapter hub:
+
+```bash
+api-anything hub search whatsapp
+api-anything hub info whatsapp-web
+api-anything hub install whatsapp-web
+```
+
+The goal: adapters submitted by pull request, indexed from Git, installable by the CLI, and reusable by any agent harness.
 
 ## Status
 

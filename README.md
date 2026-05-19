@@ -4,7 +4,7 @@
 
 API Anything is a local-first runtime for wrapping websites, dashboards, docs, and browser-authenticated apps as typed capabilities that **AI agents can inspect and run** and **humans can understand and approve**.
 
-![WhatsApp Web API preview](docs/assets/whatsapp-web-api-preview.png)
+![WhatsApp Web API commands](docs/assets/whatsapp-web-api-commands.png)
 
 ```text
 Website / Web app  ──►  API Anything Harness  ──►  Agent / CLI / MCP / Workflow
@@ -114,6 +114,46 @@ Run a read capability:
 api-anything --root ~/.api-anything run example-com read_page \
   --params '{"path":"/"}'
 ```
+
+## WhatsApp Web API example
+
+The important idea is simple: once a website has a harness, agents do not need to guess the UI every time. They inspect the available commands and run one capability.
+
+```bash
+api-anything --root ~/.api-anything inspect whatsapp-web
+api-anything --root ~/.api-anything caps whatsapp-web
+```
+
+Available capabilities in the WhatsApp Web example:
+
+| Capability | Type | What it does |
+| --- | --- | --- |
+| `health` | read | checks that the browser session is available |
+| `list_chats` | read | returns recent chats |
+| `extract_today` | read | extracts today's messages across chats |
+| `extract_date` | read | extracts messages for a date |
+| `extract_chat` | read | extracts one chat |
+| `summary_today` | read | returns a structured daily summary |
+| `send_message` | write | sends a message after human approval |
+
+Run a read command:
+
+```bash
+api-anything --root ~/.api-anything run whatsapp-web list_chats \
+  --params '{"max_chats":10}'
+```
+
+Run a write command:
+
+```bash
+api-anything --root ~/.api-anything run whatsapp-web send_message \
+  --params '{"chat":"Example Contact","text":"Final approved message"}' \
+  --confirmed \
+  --approved-by "human-reviewer" \
+  --approval-summary "Reviewed final message text and destination"
+```
+
+That is the whole shape: **inspect → choose capability → run → get JSON**.
 
 ## What a website API looks like
 
@@ -270,7 +310,8 @@ examples/sites/
   whatsapp-web/
   claude-code-docs/
 docs/assets/
-  whatsapp-web-api-preview.svg
+  whatsapp-web-api-commands.png
+  whatsapp-web-api-commands.svg
 tests/
 ```
 

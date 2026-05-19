@@ -1,0 +1,42 @@
+<svg width="1400" height="820" viewBox="0 0 1400 820" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">WhatsApp Web API commands</title>
+  <desc id="desc">A simple terminal-style view of the WhatsApp Web capabilities exposed by API Anything.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1400" y2="820" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#061A16"/><stop offset="1" stop-color="#0B1220"/>
+    </linearGradient>
+    <style>
+      .sans{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+      .title{font-size:58px;font-weight:900}.sub{font-size:25px}.label{font-size:18px;font-weight:850;letter-spacing:.08em;text-transform:uppercase}.h{font-size:25px;font-weight:850}.code{font-size:24px}.small{font-size:19px}.white{fill:#F8FAFC}.muted{fill:#A7B0BF}.green{fill:#25D366}.blue{fill:#93C5FD}.amber{fill:#FCD34D}.red{fill:#FCA5A5}
+    </style>
+  </defs>
+  <rect width="1400" height="820" rx="36" fill="url(#bg)"/>
+  <circle cx="1180" cy="100" r="190" fill="#25D366" opacity="0.08"/>
+  <circle cx="190" cy="760" r="240" fill="#60A5FA" opacity="0.07"/>
+
+  <text x="72" y="86" class="sans label green">API Anything example</text>
+  <text x="72" y="154" class="sans title white">WhatsApp Web as an API</text>
+  <text x="72" y="202" class="sans sub muted">Simple commands agents can inspect and run. Reads are automatic. Sends need human approval.</text>
+
+  <rect x="72" y="250" width="1256" height="500" rx="28" fill="#0B1120" stroke="#263244" stroke-width="2"/>
+  <rect x="72" y="250" width="1256" height="64" rx="28" fill="#111827"/>
+  <circle cx="112" cy="282" r="9" fill="#EF4444"/><circle cx="144" cy="282" r="9" fill="#F59E0B"/><circle cx="176" cy="282" r="9" fill="#22C55E"/>
+  <text x="216" y="290" class="mono small muted">terminal</text>
+
+  <text x="112" y="370" class="mono code blue">$ api-anything inspect whatsapp-web</text>
+  <text x="112" y="426" class="mono code white">health</text><text x="355" y="426" class="mono code green">read</text><text x="470" y="426" class="mono small muted">check browser session</text>
+  <text x="112" y="480" class="mono code white">list_chats</text><text x="355" y="480" class="mono code green">read</text><text x="470" y="480" class="mono small muted">return recent chats</text>
+  <text x="112" y="534" class="mono code white">extract_today</text><text x="355" y="534" class="mono code green">read</text><text x="470" y="534" class="mono small muted">extract today across chats</text>
+  <text x="112" y="588" class="mono code white">extract_chat</text><text x="355" y="588" class="mono code green">read</text><text x="470" y="588" class="mono small muted">extract one chat by date</text>
+  <text x="112" y="642" class="mono code white">summary_today</text><text x="355" y="642" class="mono code green">read</text><text x="470" y="642" class="mono small muted">structured daily summary</text>
+  <text x="112" y="696" class="mono code white">send_message</text><text x="355" y="696" class="mono code amber">write</text><text x="470" y="696" class="mono small muted">requires --confirmed + human approval</text>
+
+  <rect x="845" y="372" width="430" height="92" rx="20" fill="#052E24" stroke="#1F7A55"/>
+  <text x="875" y="410" class="sans h green">Run a read</text>
+  <text x="875" y="444" class="mono small white">run whatsapp-web list_chats</text>
+
+  <rect x="845" y="500" width="430" height="132" rx="20" fill="#2A1E09" stroke="#765B17"/>
+  <text x="875" y="538" class="sans h amber">Run a send</text>
+  <text x="875" y="574" class="mono small white">run whatsapp-web send_message</text>
+  <text x="875" y="606" class="mono small amber">--confirmed --approved-by human</text>
+</svg>

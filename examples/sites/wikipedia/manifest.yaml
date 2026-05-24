@@ -1,0 +1,34 @@
+site_id: wikipedia
+name: Wikipedia / WikiAlive
+base_url: https://www.wikipedia.org/
+auth:
+  type: none
+capabilities:
+  extract_article:
+    type: read
+    params:
+      url: string
+      title: string
+      lang: string
+    returns: object
+  wikialive:
+    type: read
+    params:
+      url: string
+      title: string
+      lang: string
+    returns: object
+  build_timeline:
+    type: read
+    params:
+      url: string
+      title: string
+      lang: string
+    returns: object
+  generate_quiz:
+    type: read
+    params:
+      url: string
+      title: string
+      lang: string
+    returns: object

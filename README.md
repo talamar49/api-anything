@@ -115,6 +115,27 @@ api-anything --root ~/.api-anything run example-com read_page \
   --params '{"path":"/"}'
 ```
 
+## Wikipedia / WikiAlive example
+
+Wikipedia is a clean read-only example: every article has the same rough shape, so the harness can turn a plain article URL into structured learning data.
+
+```bash
+api-anything --root ~/.api-anything inspect wikipedia
+api-anything --root ~/.api-anything run wikipedia wikialive \
+  --params '{"url":"https://he.wikipedia.org/wiki/משה_שרת"}'
+api-anything --root ~/.api-anything run wikipedia wikialive \
+  --params '{"url":"https://wiki-alive.vercel.app/wiki/משה_שרת"}'
+```
+
+Available capabilities:
+
+| Capability | Type | What it does |
+| --- | --- | --- |
+| `extract_article` | read | fetches a Wikipedia article through the official API |
+| `wikialive` | read | returns summary, story, timeline, quiz, cards, keywords, and a WikiAlive URL |
+| `build_timeline` | read | extracts dated events from the article |
+| `generate_quiz` | read | creates simple quiz questions from the article |
+
 ## WhatsApp Web API example
 
 The important idea is simple: once a website has a harness, agents do not need to guess the UI every time. They inspect the available commands and run one capability.

@@ -24,6 +24,15 @@ capabilities:
       timeout_ms: integer
     requires_confirmation: true
     returns: object
+  reply:
+    type: write
+    params:
+      status_id: string
+      text: string
+      cdp_url: string
+      timeout_ms: integer
+    requires_confirmation: true
+    returns: object
   post_thread:
     type: write
     params:

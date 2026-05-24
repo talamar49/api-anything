@@ -22,6 +22,11 @@ def run(capability_id, params, context):
         text = required(params, "text")
         return post_one(text, cdp_url=cdp_url, timeout_ms=timeout_ms)
 
+    if capability_id == "reply":
+        status_id = extract_status_id(required(params, "status_id"))
+        text = required(params, "text")
+        return reply_to_status(status_id, text, cdp_url=cdp_url, timeout_ms=timeout_ms)
+
     if capability_id == "post_thread":
         posts = params.get("posts")
         if not isinstance(posts, list) or not posts or not all(isinstance(item, str) and item.strip() for item in posts):
@@ -81,6 +86,32 @@ def post_one(text: str, cdp_url: str = CDP_URL, timeout_ms: int = DEFAULT_TIMEOU
         click_post(page, timeout_ms=timeout_ms)
         result_url = wait_for_post_result(page, timeout_ms=timeout_ms)
         return {"ok": True, "posted": True, "url": result_url, "evidence": "post_button_clicked_and_result_observed"}
+    finally:
+        browser.close()
+
+
+def reply_to_status(status_id: str, text: str, cdp_url: str = CDP_URL, timeout_ms: int = DEFAULT_TIMEOUT_MS) -> dict[str, Any]:
+    browser, page = connect_x_page(cdp_url, timeout_ms=timeout_ms, open_if_missing=True)
+    try:
+        ensure_logged_in(page, timeout_ms=timeout_ms)
+        page.goto(
+            f"https://x.com/intent/post?in_reply_to={status_id}&text={url_quote(text)}",
+            wait_until="domcontentloaded",
+            timeout=timeout_ms,
+        )
+        page.wait_for_timeout(1500)
+        ensure_logged_in(page, timeout_ms=timeout_ms)
+        if text[:80] not in safe_inner_text(page):
+            fill_tweet_editor(page, text, timeout_ms=timeout_ms)
+        click_post(page, timeout_ms=timeout_ms)
+        result_url = wait_for_post_result(page, timeout_ms=timeout_ms)
+        return {
+            "ok": True,
+            "posted": True,
+            "reply_to": status_id,
+            "url": result_url,
+            "evidence": "reply_button_clicked_and_result_observed",
+        }
     finally:
         browser.close()
 
@@ -147,6 +178,21 @@ def is_x_url(url: str) -> bool:
     return "x.com" in url or "twitter.com" in url or "developer.x.com" in url
 
 
+def extract_status_id(value: str) -> str:
+    import re
+
+    match = re.search(r"status/(\d+)|^(\d+)$", value)
+    if not match:
+        raise ValueError("status_id must be a numeric status id or X status URL")
+    return match.group(1) or match.group(2)
+
+
+def url_quote(value: str) -> str:
+    from urllib.parse import quote
+
+    return quote(value, safe="")
+
+
 def safe_inner_text(page) -> str:
     try:
         return page.locator("body").inner_text(timeout=3000)
@@ -195,11 +241,25 @@ def click_post(page, timeout_ms: int = DEFAULT_TIMEOUT_MS) -> None:
     for selector in selectors:
         try:
             button = page.locator(selector).last
-            button.click(timeout=timeout_ms)
+            button.click(timeout=timeout_ms, force=True)
             page.wait_for_timeout(1800)
             return
         except Exception as exc:
             last_error = exc
+    try:
+        page.keyboard.press("Control+Enter")
+        page.wait_for_timeout(1800)
+        return
+    except Exception as exc:
+        last_error = exc
+    try:
+        handle = page.locator('[data-testid="tweetButton"], [data-testid="tweetButtonInline"]').last.element_handle(timeout=3000)
+        if handle:
+            page.evaluate("button => button.click()", handle)
+            page.wait_for_timeout(1800)
+            return
+    except Exception as exc:
+        last_error = exc
     raise RuntimeError(f"could not click X post button: {last_error!r}")
 
 
